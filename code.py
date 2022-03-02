@@ -18,7 +18,6 @@ st.write('There are 2 groups of players: \n1) Exposed to ads in every 3 minutes 
 st.write('We will test if the frequency of the ads changes the played game rounds (sum_gamerounds) of players.')
 
 #Data import
-#os.chdir("/Users/eno/Documents/Data_Analytics/Simulation_for_AB_Testing_Project/Project")
 data = pd.read_csv('game_data.csv')
 st.subheader('Gamerounds played by players')
 st.dataframe(data)
