@@ -19,7 +19,7 @@ st.write('We will test if the frequency of the ads changes the played game round
 
 #Data import
 #os.chdir("/Users/eno/Documents/Data_Analytics/Simulation_for_AB_Testing_Project/Project")
-data = pd.read_csv('Streamlit_rakuten/Users/eno/Documents/Data_Analytics/Simulation_for_AB_Testing_Project/Project/game_data.csv')
+data = pd.read_csv('Streamlit_rakuten/game_data.csv')
 st.subheader('Gamerounds played by players')
 st.dataframe(data)
 st.write(f'Size: {len(data)} rows')
