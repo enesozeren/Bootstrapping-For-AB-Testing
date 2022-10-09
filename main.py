@@ -7,22 +7,20 @@ import functions as func
 
 
 # Setting up the page
-func.streamlit_setup()
+func.page_setup()
 
 # Data generation
 st.subheader('IGT data of players')
 data = func.generate_data()
 st.dataframe(data.head(10))
-st.caption('Total IGT of players in the test time period.')
+st.caption('Total IGT (in minutes) of players in the test time period (Only 10 data points are shown to illustrate)')
 
 # Summary of the Data
 st.subheader('Summary of the Data')
-st.write(f"Total Client Volume: {data['User ID'].nunique()}")
+func.summary_of_data(data)
 
-col1, col2 = st.columns(2)
-col1.metric("Control Group Client Volume", f"{data[data['Group']=='Control']['User ID'].nunique()}")
-col2.metric("Control Group Avg IGT", f"{round(data[data['Group']=='Control']['IGT'].mean(), 3)}")
+st.write('We can use bootstrapping method to calculate the statistical significance (P-Value).')
 
-col3, col4 = st.columns(2)
-col3.metric("Variant Group Client Volume", f"{data[data['Group']=='Variant']['User ID'].nunique()}")
-col4.metric("Variant Group Avg IGT", f"{round(data[data['Group']=='Variant']['IGT'].mean(), 3)}")
+# Bootstrap method
+st.subheader('P-Value Caclulation with Bootstrapping method')
+p_val = func.p_value_with_bootstrapping(data[data['Group']=='Control'], data[data['Group']=='Variant'], col_name='IGT')
