@@ -18,14 +18,23 @@ st.subheader('Summary of the Data')
 func.summary_of_data(data)
 st.write('We can use bootstrapping method to calculate the statistical significance (P-Value).')
 
-# What is Bootstrapping?    
+# What is Bootstrapping?
 st.subheader('Before applying the method: what is Bootstrapping?')
-st.write('TBD')
+st.write('If you want to see the logic of bootstrapping check the box below.')
+if st.checkbox('See the Logic of Bootstrapping'):
+    func.bootstrap_method_exp()
 
 # Implementing Bootstrap method
 st.subheader('P-Value Caclulation with Bootstrapping method')
-p_val = func.p_value_with_bootstrapping(data[data['Group']=='Control'], data[data['Group']=='Variant'], col_name='IGT')
+
+st.write("First let's define the MDE (Minumum Detectable Effect)")
+st.write("MDE is the smallest improvement you are willing to be able to detect.")
+st.write("Let's say, you expect to see at least 0.2 minute improvement on the Variant group, then set MDE = 0.2")
+st.caption("If you just want to compare which group has bigger mean, let MDE=0.0")
+MDE = st.number_input('What is your MDE?', min_value=0.0, value=0.0, step=0.1)
+
+p_val = func.p_value_with_bootstrapping(data[data['Group']=='Control'], data[data['Group']=='Variant'], col_name='IGT', mde=MDE)
 
 # Conclusion
 st.subheader('Conclusion')
-st.write('TBD')
+func.conclusion()

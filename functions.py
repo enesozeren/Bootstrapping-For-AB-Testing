@@ -1,8 +1,10 @@
+from dataclasses import replace
 import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+from PIL import Image
 
 def page_setup():
     st.set_page_config(page_title='A/B Testing with Bootstrapping')
@@ -53,6 +55,31 @@ def summary_of_data(data):
     st.write(f"Difference between Variant and Control groups for Avg IGT: {round(diff, 3)}")
     st.write(f'Avg IGT is {lift*100}% up for Variant group. However, how statistically significant is the difference?')
 
+def bootstrap_method_exp():
+    st.write('Bootstraping is any test or metric that uses random sampling with replacement and falls under the broader class of resampling methods.')
+
+    bootstrap_image = Image.open('bootstrap_image.png')
+    st.image(bootstrap_image, caption='Bootstrapping Diagram by blogs.sas.com')
+
+    st.write('Just like in the diagram, we take N resamples from our Control and Variant groups with size is equal to the group itself.')
+    st.write('We set N (Number of Bootstrap Samples) as large enough. You can play with different N values below to see how it effects the results.')
+    st.write('With this N samples we can generate the boostrap distribution for our Control and Variant Group means (In our case Avg IGT).')
+
+    st.write("Let's demonstrate the boostrapping with N=1 to understand")
+    dummy_control = [5, 2, 2, 1, 4]
+    dummy_variant = [6, 7, 8, 9, 20, 11]
+
+    st.write(f"Dummy Control Group IGTs: {dummy_control}")
+    st.write(f"Dummy Variant Group IGTs: {dummy_variant}")
+    bootstrap_sample_control = np.random.choice(dummy_control, size=len(dummy_control), replace=True)
+    st.write(f"Bootstrap sample from Control: {bootstrap_sample_control} and Mean of Bootstrap Sample: {round(np.mean(bootstrap_sample_control), 2)}")
+    bootstrap_sample_variant = np.random.choice(dummy_variant, size=len(dummy_variant), replace=True)
+    st.write(f"Bootstrap sample from Control: {bootstrap_sample_variant} and Mean of Bootstrap Sample: {round(np.mean(bootstrap_sample_variant), 2)}")
+
+    st.write(f"Variant Mean - Control Mean = {round(np.mean(bootstrap_sample_variant) - np.mean(bootstrap_sample_control), 2)}")
+
+    st.write("We do this for N times, and then we have the distribution of difference between Variant and Control. And with that distribution we can calculate p-values.")
+
 def p_value_with_bootstrapping(control_df: pd.DataFrame, variant_df: pd.DataFrame, col_name: str, number_of_samples=10_000, alpha=0.05, mde=0) -> float:
     
     control_values = control_df[col_name].values
@@ -83,9 +110,9 @@ def p_value_with_bootstrapping(control_df: pd.DataFrame, variant_df: pd.DataFram
     st.write(f"P-Value = {p_value}")
 
     if p_value <= alpha:
-        st.write(f"We can say that {col_name} is improved since P-Value({p_value}) <= Alpha({alpha})")
+        st.write(f"We can say that {col_name} is improved at the level of our MDE since P-Value({p_value}) <= Alpha({alpha})")
     else:
-        st.write(f"We can NOT say that {col_name} is improved since P-Value({p_value}) > Alpha({alpha})")
+        st.write(f"We can NOT say that {col_name} is improved  at the level of our MDE since P-Value({p_value}) > Alpha({alpha})")
 
     confidence_interval_for_difference = {'Lower Bound': np.quantile(difference_list, q=alpha/2), 'Upper Bound': np.quantile(difference_list, q=1-alpha/2)}
     st.write(f"The {(1-alpha)*100}% confidence interval for Avg IGT Difference between Variant & Control Groups:")
@@ -94,3 +121,14 @@ def p_value_with_bootstrapping(control_df: pd.DataFrame, variant_df: pd.DataFram
 
 
     return p_value
+
+def conclusion():
+    st.write('The Pros and Cons of Bootstrapping for A/B Testing are listed below')
+
+    st.write('PROS')
+    st.write('1) We do not make any assumptions about the distribution of our metric')
+    st.write('2) No required sample size for the test.')
+    st.write('3) Easy to implement and understand')
+
+    st.write('CONS')
+    st.write('1) With big data, this bootstrap simulation approach has computational burden')
