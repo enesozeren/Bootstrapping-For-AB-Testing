@@ -6,4 +6,4 @@ https://enesozeren-bootstrapping-for-ab-testing-main-d8lwfe.streamlitapp.com/
 
 Streamlit library is used for the presentation of the study.
 
-If you have any feedbacks/comments/questions please feel free to get in touch with me (address TBD)
+If you have any feedbacks/comments/questions please feel free to get in touch with me -> www.linkedin.com/in/enes-özeren-027582172
