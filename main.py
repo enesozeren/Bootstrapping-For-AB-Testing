@@ -19,7 +19,7 @@ func.summary_of_data(data)
 st.write('We can use bootstrapping method to calculate the statistical significance (P-Value).')
 
 # What is Bootstrapping?    
-st.subheader('Wait, what is bootstrapping?')
+st.subheader('Before applying the method: what is Bootstrapping?')
 st.write('TBD')
 
 # Implementing Bootstrap method

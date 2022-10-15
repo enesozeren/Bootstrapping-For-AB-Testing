@@ -53,7 +53,7 @@ def summary_of_data(data):
     st.write(f"Difference between Variant and Control groups for Avg IGT: {round(diff, 3)}")
     st.write(f'Avg IGT is {lift*100}% up for Variant group. However, how statistically significant is the difference?')
 
-def p_value_with_bootstrapping(control_df: pd.DataFrame, variant_df: pd.DataFrame, col_name: str, number_of_samples=10_000, alpha=0.05) -> float:
+def p_value_with_bootstrapping(control_df: pd.DataFrame, variant_df: pd.DataFrame, col_name: str, number_of_samples=10_000, alpha=0.05, mde=0) -> float:
     
     control_values = control_df[col_name].values
     variant_values = variant_df[col_name].values
@@ -78,7 +78,8 @@ def p_value_with_bootstrapping(control_df: pd.DataFrame, variant_df: pd.DataFram
     st.pyplot(fig)
     st.caption('The distribution of differences between bootstrap samples')
 
-    p_value = round(1 - len(list((filter(lambda x: x > 0, difference_list ))))/number_of_samples, 3)
+    st.write(f'Observed Difference (Variant - Control) = {difference}')
+    p_value = round(1 - len(list((filter(lambda x: x > 0 + mde, difference_list ))))/number_of_samples, 3)
     st.write(f"P-Value = {p_value}")
 
     if p_value <= alpha:
